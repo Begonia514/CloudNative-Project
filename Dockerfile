@@ -1,11 +1,9 @@
-FROM eclipse-temurin:8u372-b07-jre-centos7
+FROM openjdk:8-jdk-alpine
 
-ADD ./target/hello-service.jar /app/hello-service.jar
-
-ADD runboot.sh /app/
+COPY ./target/hello-service-0.0.1-SNAPSHOT.jar /app/hello-service.jar
 
 WORKDIR /app
 
-RUN chmod a+x runboot.sh
+EXPOSE 8080
 
-CMD ["sh","-c","/app/runboot.sh"]
+ENTRYPOINT ["java", "-jar", "hello-service.jar"]
