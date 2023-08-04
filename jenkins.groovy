@@ -46,6 +46,7 @@ pipeline{
                         '-p '
                 sh 'docker tag hello-server:v1 harbor.edu.cn/nju33/hello-server:v1'
                 sh 'docker push harbor.edu.cn/nju33/hello-server:v1'
+                sh 'docker pull harbor.edu.cn/nju33/hello-server:v1'
             }
         }
     }
