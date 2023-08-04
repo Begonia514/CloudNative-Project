@@ -23,6 +23,8 @@ spec:
       - name: hello-server
         image: harbor.edu.cn/nju33/hello-server:v1
         imagePullPolicy: IfNotPresent
+        imagePullSecrets:
+          - name: docker-harbor-nju33
         ports:
         - containerPort: 8080
         resources:
