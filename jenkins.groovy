@@ -10,9 +10,9 @@ pipeline{
                 echo "1. Starting to clone code from Github (may fail for several times ...)"
                 // TODO: add your own username and password here
                 sh 'curl "http://p.nju.edu.cn/portal_io/login?' +
-                        'username=' +
+                        'username=' + '' +
                         '&' +
-                        'password="'
+                        'password=' + '' + '"'
                 git url: 'https://gitee.com/coraxhome/CloudNative-Project.git', branch: 'main'
             }
         }
@@ -45,8 +45,8 @@ pipeline{
             steps {
                 // TODO: add your own username and password here
                 sh 'docker login harbor.edu.cn ' +
-                        '-u ' +
-                        '-p '
+                        '-u ' + '' +
+                        ' -p ' + ''
 
                 sh 'docker push harbor.edu.cn/nju33/hello-server:${BUILD_ID}'
             }
@@ -59,14 +59,19 @@ node('slave'){
             echo "4. Git Clone YAML to Slave"
             // TODO: add your own username and password here
             sh 'curl "http://p.nju.edu.cn/portal_io/login?' +
-                    'username=' +
+                    'username=' + '' +
                     '&' +
-                    'password="'
+                    'password=' + '' + '"'
             git url: 'https://gitee.com/coraxhome/CloudNative-Project.git', branch: 'main'
             sh 'sed -i "s#{VERSION}#${BUILD_ID}#g" hello-deployment.yaml'
         }
         stage('Deploy'){
             echo "5. Build image has finished, starting to deploy"
+            // TODO: add your own username and password here
+            sh 'docker login harbor.edu.cn ' +
+                    '-u ' + '' +
+                    ' -p ' + ''
+            sh 'docker pull harbor.edu.cn/nju33/hello-server:${BUILD_ID}'
             sh "kubectl apply -f hello-deployment.yaml -n nju33"
         }
     }

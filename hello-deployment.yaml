@@ -6,7 +6,12 @@ metadata:
   name: hello-server
   namespace: nju33
 spec:
-  replicas: 1
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   selector:
     matchLabels:
       app: hello-server
