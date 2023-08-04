@@ -26,7 +26,7 @@ spec:
         app: hello-server
     spec:
       containers:
-      - image: harbor.edu.cn/nju33/hello-server:latest
+      - image: harbor.edu.cn/nju33/hello-server:v1
         imagePullPolicy: IfNotPresent
         name: hello-server
       imagePullSecrets:
