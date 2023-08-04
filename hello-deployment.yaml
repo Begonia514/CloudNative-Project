@@ -4,6 +4,7 @@ metadata:
   name: hello-server
   labels:
     app: hello-server
+  namespace: nju33
 spec:
   replicas: 3
   strategy:
@@ -16,15 +17,17 @@ spec:
       app: hello-server
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /actuator/prometheus
+        prometheus.io/port: "8080"
+        prometheus.io/scheme: http
+        prometheus.io/scrape: "true"
       labels:
         app: hello-server
     spec:
       containers:
       - name: hello-server
         image: harbor.edu.cn/nju33/hello-server:v1
-        imagePullPolicy: IfNotPresent
-        ports:
-          - containerPort: 8080
       imagePullSecrets:
       - name: docker-harbor-nju33
 
