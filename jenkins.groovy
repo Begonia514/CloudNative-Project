@@ -1,6 +1,10 @@
 pipeline{
     agent none
 
+    environment {
+        IMAGE_VERSION = "v2"
+    }
+
     stages {
         stage('Clone Code') {
             agent {
@@ -39,8 +43,8 @@ pipeline{
             }
             steps {
                 echo "3. Build code has finished, starting to build image"
-                sh 'docker build -t hello-server:v1 .'
-                sh 'docker tag hello-server:v1 harbor.edu.cn/nju33/hello-server:v1'
+                sh 'docker build -t hello-server:' + IMAGE_VERSION + ' .'
+                sh 'docker tag hello-server:' + IMAGE_VERSION + ' harbor.edu.cn/nju33/hello-server:' + IMAGE_VERSION
             }
         }
         stage('Push Image') {
@@ -54,7 +58,7 @@ pipeline{
                         '-u ' +
                         '-p '
 
-                sh 'docker push harbor.edu.cn/nju33/hello-server:v1'
+                sh 'docker push harbor.edu.cn/nju33/hello-server:' + IMAGE_VERSION
             }
         }
     }

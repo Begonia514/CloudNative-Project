@@ -26,8 +26,8 @@ spec:
         app: hello-server
     spec:
       containers:
-      - name: hello-server
-        image: harbor.edu.cn/nju33/hello-server:v1
+      - image: harbor.edu.cn/nju33/hello-server:latest
+        name: hello-server
       imagePullSecrets:
       - name: docker-harbor-nju33
 
