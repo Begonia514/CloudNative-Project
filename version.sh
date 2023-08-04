@@ -1,1 +1,0 @@
-export JENKINS_BUILD_VERSION=v1
