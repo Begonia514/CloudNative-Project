@@ -1,5 +1,6 @@
 pipeline{
     agent none
+
     stages {
         stage('Clone Code') {
             agent {
@@ -20,7 +21,7 @@ pipeline{
             agent {
                 docker {
                     image 'maven:latest'
-                    args ' -v /home/nju33:/home/nju33'
+                    args ' -v /root/.m2:/root/.m2'
                 }
             }
             steps {
@@ -39,14 +40,21 @@ pipeline{
             steps {
                 echo "3. Build code has finished, starting to build image"
                 sh 'docker build -t hello-server:v1 .'
+                sh 'docker tag hello-server:v1 harbor.edu.cn/nju33/hello-server:v1'
+            }
+        }
+        stage('Push Image') {
+            agent {
+                label 'master'
+            }
+            steps {
                 sh 'docker logout harbor.edu.cn'
                 // TODO: add your own username and password here
                 sh 'docker login harbor.edu.cn ' +
                         '-u ' +
                         '-p '
-                sh 'docker tag hello-server:v1 harbor.edu.cn/nju33/hello-server:v1'
+
                 sh 'docker push harbor.edu.cn/nju33/hello-server:v1'
-                sh 'docker pull harbor.edu.cn/nju33/hello-server:v1'
             }
         }
     }
