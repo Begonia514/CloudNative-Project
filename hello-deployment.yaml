@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - image: harbor.edu.cn/nju33/hello-server:latest
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         name: hello-server
       imagePullSecrets:
       - name: docker-harbor-nju33
