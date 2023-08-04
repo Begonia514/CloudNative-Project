@@ -21,7 +21,7 @@ spec:
         app: hello-server
     spec:
       containers:
-        - image: harbor.edu.cn/nju33/hello-server:v3
+        - image: harbor.edu.cn/nju33/hello-server:{VERSION}
           name: hello-server
 ---
 apiVersion: v1

@@ -1,10 +1,6 @@
 pipeline{
     agent none
 
-    environment {
-        IMAGE_VERSION = "v3"
-    }
-
     stages {
         stage('Clone Code') {
             agent {
@@ -12,7 +8,6 @@ pipeline{
             }
             steps {
                 echo "1. Starting to clone code from Github (may fail for several times ...)"
-                sh 'curl "http://p.nju.edu.cn/portal_io/logout"'
                 // TODO: add your own username and password here
                 sh 'curl "http://p.nju.edu.cn/portal_io/login?' +
                         'username=' +
@@ -29,12 +24,8 @@ pipeline{
                 }
             }
             steps {
-                echo "2.1 Clone code has finished, starting to build code with maven"
-                sh 'mvn compile'
-                echo "2.2 Build code has finished, starting to run unit tests"
-                sh 'mvn test'
-                echo "2.3 Unit tests have finished, starting to package code"
-                sh 'mvn clean package'
+                echo "2. Clone code has finished, starting to build code with maven"
+                sh 'mvn -B clean package'
             }
         }
         stage('Build Image') {
@@ -43,8 +34,8 @@ pipeline{
             }
             steps {
                 echo "3. Build code has finished, starting to build image"
-                sh 'docker build -t hello-server:' + IMAGE_VERSION + ' .'
-                sh 'docker tag hello-server:' + IMAGE_VERSION + ' harbor.edu.cn/nju33/hello-server:' + IMAGE_VERSION
+                sh 'docker build -t hello-server:${BUILD_ID} .'
+                sh 'docker tag hello-server:${BUILD_ID} harbor.edu.cn/nju33/hello-server:${BUILD_ID}'
             }
         }
         stage('Push Image') {
@@ -52,13 +43,12 @@ pipeline{
                 label 'master'
             }
             steps {
-                sh 'docker logout harbor.edu.cn'
                 // TODO: add your own username and password here
                 sh 'docker login harbor.edu.cn ' +
                         '-u ' +
                         '-p '
 
-                sh 'docker push harbor.edu.cn/nju33/hello-server:' + IMAGE_VERSION
+                sh 'docker push harbor.edu.cn/nju33/hello-server:${BUILD_ID}'
             }
         }
     }
@@ -67,13 +57,13 @@ node('slave'){
     container('jnlp-kubectl'){
         stage('Clone YAML'){
             echo "4. Git Clone YAML to Slave"
-            sh 'curl "http://p.nju.edu.cn/portal_io/logout"'
             // TODO: add your own username and password here
             sh 'curl "http://p.nju.edu.cn/portal_io/login?' +
                     'username=' +
                     '&' +
                     'password="'
             git url: 'https://gitee.com/coraxhome/CloudNative-Project.git', branch: 'main'
+            sh 'sed -i "s#{VERSION}#${BUILD_ID}#g" hello-deployment.yaml'
         }
         stage('Deploy'){
             echo "5. Build image has finished, starting to deploy"
