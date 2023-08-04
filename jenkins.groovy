@@ -78,7 +78,6 @@ node('slave'){
         stage('Deploy'){
             echo "5. Build image has finished, starting to deploy"
             sh "kubectl apply -f hello-deployment.yaml -n nju33"
-            sh "kubectl apply -f hello-service.yaml -n nju33"
         }
     }
 }
