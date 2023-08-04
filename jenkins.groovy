@@ -9,12 +9,10 @@ pipeline{
                 echo "1. Starting to clone code from Github (may fail for several times ...)"
                 sh 'curl "http://p.nju.edu.cn/portal_io/logout"'
                 sh 'curl "http://p.nju.edu.cn/portal_io/login?' +
-                        'username=' +
+                        'username=211250245' +
                         '&' +
-                        'password="'
-//                sh 'if [ -d CloudNative-Project ]; then rm -rf CloudNative-Project; fi'
-//                sh 'git clone https://github.com/Begonia514/CloudNative-Project.git'
-                git url: ''
+                        'password=Archettoforever1"'
+                git url: 'https://gitee.com/coraxhome/CloudNative-Project.git', branch: 'main'
             }
         }
         stage('Build Code') {
@@ -53,10 +51,10 @@ node('slave'){
             echo "4. Git Clone YAML to Slave"
             sh 'curl "http://p.nju.edu.cn/portal_io/logout"'
             sh 'curl "http://p.nju.edu.cn/portal_io/login?' +
-                    'username=' +
+                    'username=211250245' +
                     '&' +
-                    'password="'
-            git url: ''
+                    'password=Archettoforever1"'
+            git url: 'https://gitee.com/coraxhome/CloudNative-Project.git', branch: 'main'
         }
         stage('Deploy'){
             echo "5. Build image has finished, starting to deploy"
