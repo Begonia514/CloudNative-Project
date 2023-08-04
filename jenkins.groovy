@@ -24,6 +24,10 @@ pipeline{
                 }
             }
             steps {
+                sh 'sh version.sh > version.txt'
+                def JENKINS_BUILD_VERSION = readFile('version.txt').trim()
+                sh 'cat version.txt'
+
                 echo "2.1 Clone code has finished, starting to build code with maven"
                 sh 'mvn -f CloudNative-Project/pom.xml compile'
                 echo "2.2 Build code has finished, starting to run unit tests"
@@ -38,11 +42,9 @@ pipeline{
             }
             steps {
                 echo "3. Build code has finished, starting to build image"
-                sh '''
-                    sh 'sh version.sh > version.txt\'
-                    def JENKINS_BUILD_VERSION = readFile('version.txt').trim()
-                    sh "docker build -t hello-server:${JENKINS_BUILD_VERSION} ."
-                '''
+                sh 'sh version.sh > version.txt'
+                def JENKINS_BUILD_VERSION = readFile('version.txt').trim()
+                sh "docker build -t hello-server:${JENKINS_BUILD_VERSION} ."
             }
         }
     }
