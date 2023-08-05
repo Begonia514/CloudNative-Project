@@ -74,5 +74,9 @@ node('slave'){
             sh 'docker pull harbor.edu.cn/nju33/hello-server:${BUILD_ID}'
             sh "kubectl apply -f hello-deployment.yaml -n nju33"
         }
+        stage('Monitor') {
+            echo "6. Deploy has finished, starting to monitor"
+            sh "kubectl apply -f hello-monitor.yaml -n nju33"
+        }
     }
 }
