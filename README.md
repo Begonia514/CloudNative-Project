@@ -457,4 +457,19 @@ http://172.29.4.18:31237/d/0GjqLMe4k/nju33-hello-server?from=now-5m&to=now&orgId
 
 #### 自动扩容
 
-> TBD
+~~~~yaml
+containers: HelloContainer
+  helloContainer:
+    name: cpu
+    container: hello-server
+    target:
+      type: Utilization
+      averageUtilization: 60
+~~~~
+定义Pod规约时，利用如下命令创建HPA
+
+~~~~ cmd
+kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
+~~~~
+
+此时依照yaml中配置文件设置，HPA控制器会对目标对象执行扩缩操作以确保所有的Pod中`hello-service`容器的平均用量为60%。
