@@ -76,7 +76,7 @@ node('slave'){
         }
         stage('Monitor') {
             echo "6. Deploy has finished, starting to monitor"
-            sh "kubectl apply -f hello-monitor.yaml -n nju33"
+            sh "kubectl apply -f hello-monitor.yaml -n monitoring"
         }
     }
 }
