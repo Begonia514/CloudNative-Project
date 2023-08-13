@@ -149,11 +149,11 @@ management.metrics.export.prometheus.enabled=true
 ```
 
 配置中属性的含义：
-+`port`： 指定连接器监听的端口号
-+`protocol`： 指定连接器使用的协议
-+`connectionTimeout`： 指定超时时间
-+`maxThreads`： 指定最大线程数
-+`redirectPort`： 指定重定向端口
++ `port`： 指定连接器监听的端口号
++ `protocol`： 指定连接器使用的协议
++ `connectionTimeout`： 指定超时时间
++ `maxThreads`： 指定最大线程数
++ `redirectPort`： 指定重定向端口
 
 ### DevOps要求
 
