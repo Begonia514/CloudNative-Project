@@ -6,7 +6,7 @@ metadata:
   name: hello-server
   namespace: nju33
 spec:
-  replicas: 3
+  replicas: 0
   strategy:
     type: RollingUpdate
     rollingUpdate:
