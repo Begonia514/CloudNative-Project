@@ -4,12 +4,12 @@
 
 ## 小组成员及分工
 
-|  姓名  |   学号    |                             分工                             |
-| :----: | :-------: | :----------------------------------------------------------: |
+|  姓名  |   学号    |                                              分工                                               |
+| :----: | :-------: |:---------------------------------------------------------------------------------------------:|
 | 张哲恺 | 211250245 | 完善接口代码及`Dockerfile`，提供`Prometheus`接口，编写`Kubernetes`编排文件，编写`Jenkins`流水线脚本，实现`Grafana`大屏监测，压力测试 |
-| 杨海涛 | 211250195 |                  编写接口代码及`Dockerfile`                  |
-| 刘汉弈 | 211250211 |                                                              |
-| 胡立涛 | 211250241 |                                                              |
+| 杨海涛 | 211250195 |                                      编写接口代码及`Dockerfile`                                      |
+| 刘汉弈 | 211250211 |                                    修改`tomcat`相关配置文件实现统一限流                                     |
+| 胡立涛 | 211250241 |                              完善`Dockerfile`，实现基于HPA管理的Pod水平自动扩缩                               |
 
 ## 功能截图与说明
 
@@ -137,9 +137,23 @@ management.metrics.export.prometheus.enabled=true
 
 #### 统一限流
 
-> TBD
-
 在分布式集群中，一个节点只能对自己限流，因此实现统一限流的方式是在更高层的`Nginx`或`Tomcat`进行相应的配置
+
+我们决定修改`Tomcat`中的相关配置实现统一限流
+
+在`Tomcat`目录下的conf/server.xml中配置如下：
+```xml
+<Connector  port="32364" protocol="HTTP/1.1"
+            connectionTimeout="5000" maxThreads="10"
+            redirectPort="32364" />
+```
+
+配置中属性的含义：
++ `port`： 指定连接器监听的端口号
++ `protocol`： 指定连接器使用的协议
++ `connectionTimeout`： 指定超时时间
++ `maxThreads`： 指定最大线程数
++ `redirectPort`： 指定重定向端口
 
 ### DevOps要求
 
@@ -457,4 +471,19 @@ http://172.29.4.18:31237/d/0GjqLMe4k/nju33-hello-server?from=now-5m&to=now&orgId
 
 #### 自动扩容
 
-> TBD
+~~~~yaml
+containers: HelloContainer
+  helloContainer:
+    name: cpu
+    container: hello-server
+    target:
+      type: Utilization
+      averageUtilization: 60
+~~~~
+定义Pod规约时，利用如下命令创建HPA
+
+~~~~ cmd
+kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
+~~~~
+
+此时依照yaml中配置文件设置，HPA控制器会对目标对象执行扩缩操作以确保所有的Pod中`hello-service`容器的平均用量为60%。

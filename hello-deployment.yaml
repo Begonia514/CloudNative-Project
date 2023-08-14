@@ -12,6 +12,13 @@ spec:
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
+  containers: HelloContainer
+  helloContainer:
+    name: cpu
+    container: hello-server
+    target:
+      type: Utilization
+      averageUtilization: 60
   selector:
     matchLabels:
       app: hello-server
